@@ -48,7 +48,7 @@ pub async fn run_tgen(config: Config, verbose: bool) -> Result<(), Error> {
                 create_dir_all(parent).await?;
             }
             let ts_output = format!(
-                "export const {output} = {dictionaries} as const;\n\nexport type Dict = typeof {output}[keyof typeof {output}];\n",
+                "export const {output} = {dictionaries} as const;\n\nexport type Dict = (typeof {output})[keyof typeof {output}];\n",
                 output = target.output,
                 dictionaries = serde_json::to_string_pretty(&all_translations)?
             );
