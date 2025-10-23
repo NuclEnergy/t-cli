@@ -8,6 +8,7 @@ use tokio::fs::read_to_string;
 use crate::{error::Error, utils::expr_to_value::expr_to_value};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Config {
     pub languages: LanguageNode,
     pub targets: Vec<Target>,
@@ -31,6 +32,7 @@ impl Default for Config {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct LanguageNode {
     pub name: String,
     #[serde(default)]
