@@ -1,5 +1,6 @@
+use indexmap::IndexMap;
 use std::{
-    collections::{BTreeMap, HashMap},
+    collections::HashMap,
     path::{Path, PathBuf},
 };
 
@@ -14,7 +15,7 @@ use crate::{config::Config, error::Error, utils::resolve::resolve_workspaces};
 
 pub async fn run_collect(config: Config, verbose: bool) -> Result<(), Error> {
     let cm: Lrc<SourceMap> = Default::default();
-    let mut collected: HashMap<PathBuf, BTreeMap<String, Option<String>>> = HashMap::new();
+    let mut collected: HashMap<PathBuf, IndexMap<String, Option<String>>> = HashMap::new();
     let default_lang = config.languages.name.clone();
     let all_langs = config.languages.collect_languages();
 
@@ -24,7 +25,7 @@ pub async fn run_collect(config: Config, verbose: bool) -> Result<(), Error> {
             if verbose {
                 println!("Scanning workspace: {}", workspace.display());
             }
-            // only walk one level deep
+            // Only walk one level deep
             let walker = WalkDir::new(&workspace).max_depth(1).into_iter();
             for entry in walker.filter_map(Result::ok) {
                 let path = entry.path();
@@ -64,8 +65,10 @@ pub async fn run_collect(config: Config, verbose: bool) -> Result<(), Error> {
                                 .or_default();
                             for k in &visitor.keys {
                                 if lang == &default_lang {
+                                    // Default language: key => same value
                                     map.insert(k.clone(), Some(k.clone()));
                                 } else {
+                                    // Other languages: only placeholder, keep insertion order
                                     map.entry(k.clone()).or_insert(None);
                                 }
                             }
@@ -79,11 +82,13 @@ pub async fn run_collect(config: Config, verbose: bool) -> Result<(), Error> {
     for (file_path, mut map) in collected {
         if file_path.exists() {
             let old_content = read_to_string(&file_path).await?;
+            // Old file also uses IndexMap to read, preserve order semantics
             if let Ok(old_map) =
-                serde_json::from_str::<BTreeMap<String, Option<String>>>(&old_content)
+                serde_json::from_str::<IndexMap<String, Option<String>>>(&old_content)
             {
                 for (k, v) in old_map {
                     if let Some(val) = v {
+                        // Override existing key values, but do not change current insertion order
                         map.insert(k, Some(val));
                     }
                 }
