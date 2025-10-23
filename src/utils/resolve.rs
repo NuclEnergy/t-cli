@@ -49,6 +49,10 @@ pub fn resolve_workspaces(
     }
 
     let mut ws = workspaces.into_iter().collect::<Vec<_>>();
-    ws.sort();
+    ws.sort_by(|a, b| {
+        a.to_string_lossy()
+            .to_lowercase()
+            .cmp(&b.to_string_lossy().to_lowercase())
+    });
     Ok(ws)
 }

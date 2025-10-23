@@ -11,6 +11,7 @@ resolver = "3"
 clap = { version = "4", features = ["derive"] }
 futures = "0.3"
 ignore = "0.4"
+indexmap = { version = "2", features = ["serde"] }
 path-clean = "1"
 regex = "1"
 serde = { version = "1", features = ["derive"] }
@@ -24,7 +25,6 @@ thiserror = "2"
 tokio = { version = "1", features = ["full"] }
 tokio-stream = { version = "0.1", features = ["full"] }
 walkdir = "2"
-indexmap = { version = "2", features = ["serde"] }
 
 [dev-dependencies]
 tempfile = "3"

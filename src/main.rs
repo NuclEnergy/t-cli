@@ -29,6 +29,24 @@ async fn main() -> Result<(), Error> {
             generate::tgen::run_tgen(config, verbose).await?;
             println!("Generated successfully");
         }
+        cli::Commands::Clean { config, verbose } => {
+            let config = config::load_config_from_file(&config).await?;
+            collect::run_clean(config, verbose).await?;
+            println!("Cleaned successfully");
+        }
+        cli::Commands::Cg { config, verbose } => {
+            let config = config::load_config_from_file(&config).await?;
+            collect::run_collect(config.clone(), verbose).await?;
+            generate::tgen::run_tgen(config, verbose).await?;
+            println!("Collected and generated successfully");
+        }
+        cli::Commands::Gc { config, verbose } => {
+            let config = config::load_config_from_file(&config).await?;
+            collect::run_collect(config.clone(), verbose).await?;
+            generate::tgen::run_tgen(config.clone(), verbose).await?;
+            collect::run_clean(config, verbose).await?;
+            println!("Collected, generated and cleaned successfully");
+        }
     }
 
     Ok(())

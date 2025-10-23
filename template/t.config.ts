@@ -1,4 +1,4 @@
-import { AllLanguages } from "@nuclenergy/t";
+import { AllLanguages, extract_languages_from_config } from "@nuclenergy/t";
 import { TConfig } from "@nuclenergy/t/tconfig";
 
 const config = {
@@ -21,5 +21,9 @@ const config = {
 } as const satisfies TConfig;
 
 export type Language = AllLanguages<typeof config>;
+
+export const languages = extract_languages_from_config(config);
+export const defaultLanguage = config.languages.name;
+export const langKey = "lang";
 
 export default config;
