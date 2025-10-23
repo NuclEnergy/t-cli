@@ -53,6 +53,7 @@ impl LanguageNode {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Target {
     pub includes: Vec<String>,
     pub excludes: Vec<String>,
