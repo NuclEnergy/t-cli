@@ -1,6 +1,6 @@
 [package]
 name = "t-cli"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2024"
 authors = ["Jiaxiang Zhang <nuclefpv@gmail.com>"]
 license = "MIT"
