@@ -1,6 +1,7 @@
 use cli::Cli;
 use error::Error;
 
+mod clean;
 mod cli;
 mod collect;
 mod config;
@@ -31,7 +32,7 @@ async fn main() -> Result<(), Error> {
         }
         cli::Commands::Clean { config, verbose } => {
             let config = config::load_config_from_file(&config).await?;
-            collect::run_clean(config, verbose).await?;
+            clean::run_clean(config, verbose).await?;
             println!("Cleaned successfully");
         }
         cli::Commands::Cg { config, verbose } => {
@@ -44,7 +45,7 @@ async fn main() -> Result<(), Error> {
             let config = config::load_config_from_file(&config).await?;
             collect::run_collect(config.clone(), verbose).await?;
             generate::tgen::run_tgen(config.clone(), verbose).await?;
-            collect::run_clean(config, verbose).await?;
+            clean::run_clean(config, verbose).await?;
             println!("Collected, generated and cleaned successfully");
         }
     }
