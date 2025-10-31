@@ -1,4 +1,7 @@
-use std::{collections::{HashMap, HashSet}, path::PathBuf};
+use std::{
+    collections::{HashMap, HashSet},
+    path::PathBuf,
+};
 
 use indexmap::IndexMap;
 use swc_common::{FileName, SourceMap, sync::Lrc};
